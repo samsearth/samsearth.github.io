@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Teams Q&A Link Generator</title>
+
+    <!-- Custom CSS for styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* Replace with your preferred Adobe or Microsoft font */
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #0078d4;
+            margin-top: 30px;
+            font-size: 36px; /* Bigger title */
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 40px;
+            padding: 30px;
+        }
+
+        label {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            font-size: 16px;
+            padding: 15px;
+            width: 60%;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 15px 20px;
+            background-color: #0078d4;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #005a9e;
+        }
+
+        /* Adjusted styles for the URL display */
+        .url-display {
+            font-size: 16px;
+            margin-top: 10px;
+            text-align: center;
+            width: 80%; /* Adjusted width to fit in 2 lines */
+            word-wrap: break-word; /* Allows the URL to wrap to the next line */
+            line-height: 1.2; /* Improved line spacing */
+        }
+
+        /* Added styles for the next section */
+        .next-section {
+            margin-top: 20px;
+            font-size: 20px; /* Increased font size */
+        }
+
+        .share-text {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        /* Styles for the visit counter */
+        .visit-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="visit-counter">Visits: <span id="visitCount">0</span></div>
+        <h1>Get your Q&A link</h1>
+
+        <div class="form-container">
+            <label for="originalURL">Grab your Q&A link. Share with attendees. Engage early.</label>
+            <input type="text" id="originalURL" placeholder="Paste your Teams join meeting link" aria-label="Meeting URL">
+
+            <button onclick="getFinalURL()">Go</button>
+
+            <!-- Smart and engaging text -->
+            <p class="next-section"></p>
+
+            <!-- Modified the URL display section -->
+            <p class="url-display"><span id="finalURL">[Your Q&A Link will appear here]</span></p>
+
+            <button onclick="copyToClipboard()">Copy</button>
+        </div>
+    </div>
+
+    <script>
+        // Visit counter using localStorage
+        let visitCount = localStorage.getItem('visitCount') || 0;
+        visitCount = parseInt(visitCount) + 1;
+        localStorage.setItem('visitCount', visitCount);
+        document.getElementById('visitCount').innerText = visitCount;
+
+        function getFinalURL() {
+            var originalURL = document.getElementById("originalURL").value;
+
+            if (originalURL.length >= 50) {
+                var modifiedURL = "https://teams.microsoft.com/_#/qna/19:meeting_" + originalURL.substring(50);
+                var finalURL = modifiedURL.split("%")[0] + "@thread.v2?ctx=chat";
+                finalURL = finalURL.replace("_ting_", "_");
+                document.getElementById("finalURL").innerText = finalURL;
+            } else {
+                alert("Please enter a valid Teams meeting link.");
+            }
+        }
+
+        function copyToClipboard() {
+            var finalURL = document.getElementById("finalURL").innerText;
+            var dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = finalURL;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            alert("Link copied to clipboard: " + finalURL);
+        }
+    </script>
+</body>
+</html>
